@@ -10,12 +10,14 @@
     "test:record": "RECORD_VIDEO=1 playwright test --config=playwright.config.record.ts && node scripts/collect-recordings.js && node scripts/combine-recordings.js",
     "test:ui": "playwright test --ui",
     "report": "playwright show-report",
-    "save-promo-session": "node scripts/save-promo-account-session.js"
+    "save-promo-session": "node scripts/save-promo-account-session.js",
+    "save-dev-session": "node scripts/save-dev-session.js"
   },
   "devDependencies": {
     "@playwright/test": "^1.47.0",
     "csv-parse": "^5.5.6",
     "dotenv": "^16.4.5",
+    "otplib": "^13.4.1",
     "typescript": "^7.0.2"
   }
 }

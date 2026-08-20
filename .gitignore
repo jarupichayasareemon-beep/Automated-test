@@ -1,11 +1,8 @@
 node_modules/
+storageState*.json
 test-results/
-playwright-report/
-playwright/.cache/
-.env
-storageState.json
-storageState-empty.json
-storageState-promo.json
 recordings/
-.DS_Store
-.claude/
+.env
+tests/helpers/testprod-*.ts
+tests/regression/
+scripts/

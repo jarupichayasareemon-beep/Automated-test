@@ -1,0 +1,8 @@
+.env
+storage_state.json
+storage_state*.json
+aws_console_storage_state.json
+aws_console_storage_state*.json
+venv/
+__pycache__/
+*.pyc

@@ -1,9 +1,9 @@
 import { test, expect, Page, BrowserContext } from '@playwright/test';
 import path from 'node:path';
-import { loadTranslations, createTranslator, LOCALES } from '../utils/i18n';
-import { login } from './helpers/auth';
-import { createLanguageTracker } from './helpers/language';
-import { createSharedPage, closeSharedPage } from './helpers/recording';
+import { loadTranslations, createTranslator, LOCALES } from '../../Utils/i18n';
+import { login } from '../helpers/auth';
+import { createLanguageTracker } from '../helpers/language';
+import { createSharedPage, closeSharedPage } from '../helpers/recording';
 
 // รวม 4 ไฟล์เดิม (saved-cards-i18n.spec.ts, delete-dialog-i18n.spec.ts,
 // empty-cards-i18n.spec.ts, set-default-dialog-i18n.spec.ts) เป็นไฟล์เดียว
@@ -12,12 +12,12 @@ import { createSharedPage, closeSharedPage } from './helpers/recording';
 // รวม *ไฟล์* ไม่ได้รวม state ของแต่ละ block เข้าด้วยกัน แต่ละ block จึงยังต้อง
 // เป็นอิสระจากกันเหมือนเดิม (ดูคอมเมนต์ของแต่ละ block ว่าทำไม)
 //
-// tests/auth.setup.ts **ไม่ได้ถูกรวม** เข้ามาด้วย เพราะมันเป็น Playwright
+// auth.setup.ts **ไม่ได้ถูกรวม** เข้ามาด้วย เพราะมันเป็น Playwright
 // project dependency (ที่ project 'setup' ใช้ `testMatch: /auth\.setup\.ts/`
 // ของ playwright.config.ts จับคู่อยู่) ไม่ใช่ไฟล์ spec ธรรมดา จึงต้องแยกไฟล์
 // ไว้แบบนี้ pattern นั้นถึงจะยังทำงานได้
 const translations = loadTranslations(
-  path.join(__dirname, '../data/buyer-profile-payment-container.csv')
+  path.join(__dirname, '../../data/buyer-profile-payment-container.csv')
 );
 const t = createTranslator(translations);
 const headingTextByCode = Object.fromEntries(

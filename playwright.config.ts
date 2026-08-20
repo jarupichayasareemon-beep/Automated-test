@@ -2,7 +2,7 @@ import { defineConfig, devices } from '@playwright/test';
 import 'dotenv/config';
 
 export default defineConfig({
-  testDir: './tests',
+  testDir: './Test case',
   // เพิ่มจาก 30 วินาที: env-Pre (BASE_URL) ตอบสนองช้ากว่า dev.ticketmelon.com
   // เห็นได้ชัด และ timeout เดิมตัดจบ login ก่อนที่หน้าเว็บจะโหลดเสร็จด้วยซ้ำ
   timeout: 90_000,
@@ -35,21 +35,21 @@ export default defineConfig({
     headless: process.env.CI ? true : false,
   },
   projects: [
-    // login ครั้งเดียว (tests/auth.setup.ts) แล้วเขียน storageState.json
-    // project chromium จะ depend อันนี้แล้วใช้ session นั้นซ้ำทุกเทสต์ แทนที่
-    // จะให้แต่ละเทสต์ login เอง
+    // login ครั้งเดียว (Test case/Localize saved card/auth.setup.ts) แล้วเขียน
+    // storageState.json project chromium จะ depend อันนี้แล้วใช้ session นั้น
+    // ซ้ำทุกเทสต์ แทนที่จะให้แต่ละเทสต์ login เอง
     { name: 'setup', testMatch: /auth\.setup\.ts/ },
     {
       name: 'chromium',
-      testIgnore: /regression\//,
+      testIgnore: /Regression-Buyer\//,
       use: { ...devices['Desktop Chrome'], storageState: 'storageState.json' },
       dependencies: ['setup'],
     },
 
-    // ชุด regression ของ TestProd (tests/regression/**) — คนละ origin
-    // (www.ticketmelon.com ไม่ใช่ dev.ticketmelon.com) กันไม่ให้ project
+    // ชุด regression ของ TestProd (Test case/Regression-Buyer/**) — คนละ
+    // origin (www.ticketmelon.com ไม่ใช่ dev.ticketmelon.com) กันไม่ให้ project
     // 'chromium' ด้านบนไปยุ่งด้วยผ่าน testIgnore เพื่อให้การรัน
-    // tests/regression อย่างเดียวไม่ไปกระตุ้น project 'setup' ของฝั่ง
+    // Regression-Buyer อย่างเดียวไม่ไปกระตุ้น project 'setup' ของฝั่ง
     // dev-domain โดยไม่จำเป็น ไม่มี project setup/storageState แยกตรงนี้
     // เพราะแต่ละไฟล์ spec เปิด page แค่หน้าเดียวสำหรับทุกอย่างที่มันทำ (ดู
     // buyer-purchase-flow.spec.ts) และ login เป็นขั้นตอนหนึ่งใน flow เดียวกัน
@@ -57,7 +57,7 @@ export default defineConfig({
     // สิ่งที่จริงๆ แล้วควรเป็น session เดียวต่อเนื่อง
     {
       name: 'testprod',
-      testDir: './tests/regression',
+      testDir: './Test case/Regression-Buyer',
       use: { ...devices['Desktop Chrome'] },
     },
   ],

@@ -30,6 +30,11 @@ export default defineConfig({
     screenshot: 'only-on-failure',
     video: 'on',
     launchOptions: { slowMo: SLOW_MO_MS },
+    // ดู playwright.config.ts ว่าทำไมต้องใช้ Chrome จริงแทน Chromium ที่แถมมา
+    // (env-Pre บล็อกด้วย CloudFront 403) และทำไมต้องบังคับ headed ด้วย
+    // (CloudFront บล็อก headless fingerprint แม้เป็น Chrome จริงก็ตาม)
+    channel: 'chrome',
+    headless: process.env.CI ? true : false,
   },
   projects: [
     { name: 'setup', testMatch: /auth\.setup\.ts/ },

@@ -1,0 +1,8 @@
+{
+  "permissions": {
+    "allow": [
+      "Read(//Users/jarupichayasareemon/**)",
+      "Bash(zip -r -X playwright-i18n-buyer-payment.zip playwright-project -x playwright-project/node_modules/* -x playwright-project/.env -x playwright-project/storageState.json -x playwright-project/storageState-empty.json -x playwright-project/test-results/* -x playwright-project/playwright-report/* -x playwright-project/recordings/* -x playwright-project/.DS_Store -x playwright-project/**/.DS_Store)"
+    ]
+  }
+}

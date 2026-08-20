@@ -1,6 +1,6 @@
 import fs from 'fs';
 import { test as setup } from '@playwright/test';
-import { login } from './helpers/auth';
+import { login } from '../helpers/auth';
 
 const authFile = 'storageState.json';
 

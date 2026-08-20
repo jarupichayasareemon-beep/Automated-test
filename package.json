@@ -1,0 +1,21 @@
+{
+  "name": "playwright-i18n-buyer-payment",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Playwright automated i18n/UI tests for the Ticketmelon buyer profile payment (Saved Cards) page, verified against Copy 2 Localization language [Profile payment] - 12. buyer-profile-payment-container.csv",
+  "scripts": {
+    "test": "playwright test",
+    "test:headed": "playwright test --headed",
+    "test:watch": "playwright test --headed --config=playwright.config.watch.ts",
+    "test:record": "RECORD_VIDEO=1 playwright test --config=playwright.config.record.ts && node scripts/collect-recordings.js && node scripts/combine-recordings.js",
+    "test:ui": "playwright test --ui",
+    "report": "playwright show-report",
+    "save-promo-session": "node scripts/save-promo-account-session.js"
+  },
+  "devDependencies": {
+    "@playwright/test": "^1.47.0",
+    "csv-parse": "^5.5.6",
+    "dotenv": "^16.4.5",
+    "typescript": "^7.0.2"
+  }
+}

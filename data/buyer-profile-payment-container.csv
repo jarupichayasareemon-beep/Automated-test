@@ -1,0 +1,27 @@
+Key-FE,en-US,th,vi,zh-CN,id,ms-MY,ko-KR,ja-JP,zh-HK
+save_cards_title,Saved Cards,บัตรที่บันทึกไว้,Thẻ đã lưu,已保存的卡,Kartu Tersimpan,Kad Tersimpan,저장된 카드,保存済みカード,已儲存的卡
+save_cards_information,Your information is safeguarded with industry standard encryption and PCI security standards, ข้อมูลของคุณได้รับการปกป้องด้วยการเข้ารหัสมาตรฐานอุตสาหกรรมและมาตรฐานความปลอดภัย PCI,Thông tin của bạn được bảo vệ bằng mã hóa tiêu chuẩn ngành và tiêu chuẩn bảo mật PCI,您的信息受行业标准加密和PCI安全标准保护,Informasi Anda dilindungi enkripsi standar industri dan standar keamanan PCI,Maklumat anda dilindungi dengan penyulitan standard industri dan piawaian keselamatan PCI,고객님의 정보는 업계 표준 암호화 및 PCI 보안 기준으로 보호됩니다,お客様の情報は業界標準の暗号化およびPCIセキュリティ基準で保護されています,您的資料受行業標準加密及PCI安全標準保護
+set_default_card,Set as default,ตั้งเป็นค่าเริ่มต้น,Đặt làm mặc định,设为默认,Jadikan default,Tetapkan sebagai lalai,기본 카드로 설정,デフォルトに設定,設為預設
+dialog_confirm_set_default_description,This card will be auto-selected at checkout.,บัตรนี้จะถูกเลือกอัตโนมัติเมื่อชำระเงิน,Thẻ này sẽ được tự động chọn khi thanh toán.,结账时将自动选择此卡。,Kartu ini akan dipilih otomatis saat checkout.,Kad ini akan dipilih secara automatik semasa daftar keluar.,이 카드는 결제 시 자동으로 선택됩니다.,このカードは決済時に自動的に選択されます。,結帳時將自動選取此卡。
+dialog_confirm_button,Confirm,ยืนยัน,Xác nhận,确认,Konfirmasi,Sahkan,확인,確認する,確認
+card_currency,Currency: {{currency}},สกุลเงิน: {{currency}},Tiền tệ: {{currency}},货币：{{currency}},Mata uang: {{currency}},Mata wang: {{currency}},통화: {{currency}},通貨：{{currency}},貨幣：{{currency}}
+card_delete,Delete,ลบ,Xóa,删除,Hapus,Padam,삭제,削除,刪除
+card_default,Default,ค่าเริ่มต้น,Mặc định,默认,Default,Lalai,기본,デフォルト,預設
+card_expired,Expired,หมดอายุ,Hết hạn,已过期,Kedaluwarsa,Tamat tempoh,만료됨,有効期限切れ,已過期
+empty_card_title,You haven't saved any cards yet.,คุณยังไม่ได้บันทึกบัตรใดๆ,Bạn chưa lưu thẻ nào.,暂无已保存的卡片。,Belum ada kartu yang tersimpan.,Anda belum menyimpan sebarang kad.,저장된 카드가 없습니다.,保存済みのカードがありません。,尚未儲存任何卡片。
+empty_card_description,You can save your card during checkout.,คุณสามารถบันทึกบัตรได้ระหว่างการชำระเงิน,Bạn có thể lưu thẻ khi thanh toán.,您可以在结账时保存卡片。,Kartu dapat disimpan saat checkout.,Anda boleh menyimpan kad semasa membuat pembelian.,결제 시 카드를 저장할 수 있습니다.,ご購入の際にカードを保存できます。,您可以在結帳時儲存卡片。
+dialog_warning_delete_content,Please change your default card before deleting this card.,กรุณาเปลี่ยนบัตรเริ่มต้นก่อนลบบัตรนี้,Vui lòng đổi thẻ mặc định trước khi xóa thẻ này.,请先更换默认卡，再删除此卡。,Ubah kartu default sebelum menghapus kartu ini.,Sila tukar kad lalai sebelum memadam kad ini.,이 카드를 삭제하기 전에 기본 카드를 변경해 주세요.,このカードを削除する前に、デフォルトカードを変更してください。,請先更換預設卡，再刪除此卡。
+dialog_warning_delete_ok_button,OK,ตกลง,OK,确定,OK,OK,확인,OK,確定
+dialog_confirm_set_default_title,Set as default?,ตั้งเป็นค่าเริ่มต้น?,Đặt làm mặc định?,设为默认?,Jadikan default?,Tetapkan sebagai lalai?,기본 카드로 설정?,デフォルトに設定?,設為預設?
+dialog_confirm_delete_title,Delete this card?,ลบบัตรนี้?,Xóa thẻ này?,删除此卡？,Hapus kartu ini?,Padam kad ini?,이 카드를 삭제할까요?,このカードを削除しますか？,刪除此卡？
+dialog_confirm_delete_description,This card will be removed from your saved payment methods. You can always add it again later.,บัตรนี้จะถูกลบออกจากวิธีการชำระเงินที่บันทึกไว้ คุณสามารถเพิ่มกลับได้ในภายหลัง,Thẻ này sẽ bị xóa khỏi phương thức thanh toán đã lưu. Bạn có thể thêm lại bất cứ lúc nào.,此卡将从已保存的支付方式中移除。您可以随时重新添加。,Kartu ini akan dihapus dari metode pembayaran tersimpan. Anda dapat menambahkannya kembali kapan saja.,Kad ini akan dikeluarkan daripada kaedah pembayaran tersimpan. Anda boleh menambahnya semula kemudian.,이 카드가 저장된 결제 수단에서 삭제됩니다. 나중에 다시 추가할 수 있습니다.,このカードは保存済みのお支払い方法から削除されます。後からいつでも追加できます。,此卡將從已儲存的付款方式中移除。您隨時可以重新新增。
+dialog_confirm_cancel_button,Cancel,ยกเลิก,Hủy,取消,Batal,Batal,취소,キャンセル,取消
+dialog_confirm_delete_button,Delete,ลบ,Xóa,删除,Hapus,Padam,삭제,削除,刪除
+paginate_previous,Previous,ก่อนหน้า,Trước,上一张,Sebelumnya,Sebelum,이전,前へ,上一張
+paginate_next,Next,ถัดไป,Tiếp theo,下一张,Berikutnya,Seterusnya,다음,次へ,下一張
+paginate_page_of_all,Page {{currentPage}} of {{totalPages}},หน้า {{currentPage}} จาก {{totalPages}},Trang {{currentPage}} / {{totalPages}},第 {{currentPage}} 页，共 {{totalPages}} 页,Halaman {{currentPage}} dari {{totalPages}},Halaman {{currentPage}} daripada {{totalPages}},{totalPages}}페이지 중 {{currentPage}}페이지,{{totalPages}} ページ中 {{currentPage}} ページ,第 {{currentPage}} 頁，共 {{totalPages}} 頁
+card_delete_success,Card deleted successfully.,ลบบัตรสำเร็จแล้ว,Đã xóa thẻ thành công.,卡片已删除。,Kartu berhasil dihapus.,Kad berjaya dipadam.,카드가 삭제되었습니다.,カードを削除しました。,卡片已成功刪除。
+default_card_updated,Default card updated.,อัปเดตบัตรเริ่มต้นแล้ว,Đã cập nhật thẻ mặc định.,默认卡已更新。,Kartu default telah diperbarui.,Kad lalai dikemas kini.,기본 카드가 업데이트되었습니다.,デフォルトカードを更新しました。,預設卡已更新。
+error_card_delete_failed,Failed to delete card. Please try again.,ลบบัตรไม่สำเร็จ กรุณาลองใหม่อีกครั้ง,Xóa thẻ thất bại. Vui lòng thử lại.,删除失败，请重试。,Gagal menghapus kartu. Silakan coba lagi.,Gagal memadam kad. Sila cuba lagi.,카드 삭제에 실패했습니다. 다시 시도해 주세요.,カードの削除に失敗しました。もう一度お試しください。,刪除失敗，請重試。
+error_fetch_failed,Failed to fetch. Please try again.,ไม่สามารถโหลดข้อมูลได้ กรุณาลองใหม่อีกครั้ง,Không thể tải dữ liệu. Vui lòng thử lại.,获取数据失败，请重试。,Gagal memuat data. Silakan coba lagi.,Gagal memuatkan data. Sila cuba lagi.,데이터를 불러오지 못했습니다. 다시 시도해 주세요.,データの取得に失敗しました。もう一度お試しください。,無法取得資料，請稍後再試。
+,No Internet Connection. Please check your connection and try again.,,,,,,,,

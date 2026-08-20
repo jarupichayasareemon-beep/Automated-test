@@ -1,0 +1,11 @@
+node_modules/
+test-results/
+playwright-report/
+playwright/.cache/
+.env
+storageState.json
+storageState-empty.json
+storageState-promo.json
+recordings/
+.DS_Store
+.claude/

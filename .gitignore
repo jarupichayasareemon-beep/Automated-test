@@ -1,8 +1,19 @@
 node_modules/
+.env
 storageState*.json
 test-results/
 recordings/
-.env
-tests/helpers/testprod-*.ts
-tests/regression/
-scripts/
+.DS_Store
+.claude/
+playwright-report/
+**/Regression-Buyer/
+**/testprod-*.ts
+
+# unrelated projects/files - not part of this repo
+Add-on-ticket-automation-full/
+Add-on-ticket-automation-full 2/
+Add-on-ticket-automation-full-v2.zip
+Add-on-ticket-automation-full.zip
+admintool-refund-orders/
+data/
+playwright-i18n-buyer-payment.zip

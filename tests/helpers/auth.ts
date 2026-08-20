@@ -1,4 +1,5 @@
 import { Page } from '@playwright/test';
+import { generateSync } from 'otplib';
 
 /**
  * ล็อกอินที่หน้า sign-in ของ dev-env ก่อนแต่ละเทสต์
@@ -25,16 +26,25 @@ import { Page } from '@playwright/test';
  * ค่า default ของ credential มาจาก env var TEST_EMAIL / TEST_PASSWORD (ดู
  * .env.example) — กรอกค่าจริงใน `.env` ของคุณเอง อย่า hardcode ไว้ในนี้หรือ
  * commit ขึ้น git ส่ง `credentials` เข้ามาแทนถ้าจะล็อกอินด้วยบัญชีอื่น (เช่น
- * tests/auth-empty.setup.ts ใช้ TEST_EMPTY_EMAIL / TEST_EMPTY_PASSWORD เพื่อ
- * เข้าบัญชีที่ไม่มีบัตรบันทึกไว้เลย สำหรับเทสต์ empty-state)
+ * tests/localize-saved-card.spec.ts ใช้ TEST_EMPTY_EMAIL / TEST_EMPTY_PASSWORD
+ * เพื่อเข้าบัญชีที่ไม่มีบัตรบันทึกไว้เลย สำหรับเทสต์ empty-state — บัญชีนี้ติด
+ * TOTP 2FA เหมือนกับ TEST_PROMO_EMAIL ของฝั่ง regression เพราะเป็นบัญชีเดียวกัน
+ * เลยส่ง totpSecret มาด้วยเพื่อกรอกโค้ด 2FA อัตโนมัติ ไม่งั้น login จะค้างรอ
+ * modal 2FA จน waitForURL ด้านล่าง timeout)
  */
 export async function login(
   page: Page,
-  credentials?: { email: string | undefined; password: string | undefined; envVarNames: [string, string] }
+  credentials?: {
+    email: string | undefined;
+    password: string | undefined;
+    envVarNames: [string, string];
+    totpSecret?: string;
+  }
 ): Promise<void> {
   const email = credentials?.email ?? process.env.TEST_EMAIL;
   const password = credentials?.password ?? process.env.TEST_PASSWORD;
   const [emailVar, passwordVar] = credentials?.envVarNames ?? ['TEST_EMAIL', 'TEST_PASSWORD'];
+  const totpSecret = credentials?.totpSecret;
 
   if (!email || !password) {
     throw new Error(
@@ -51,6 +61,29 @@ export async function login(
   await page.locator('#input-input-username').fill(email);
   await page.locator('#input-input-password').fill(password);
   await page.locator('#btn-submit-login').click();
+
+  // บัญชีที่ติด TOTP 2FA จะเด้ง modal ขึ้นมาทับหน้าเดิม (ไม่เปลี่ยน URL เลย —
+  // ยืนยันจากการตรวจ DOM จริง) เช็คตรงนี้ก่อน waitForURL ด้านล่าง เพราะถ้าปล่อย
+  // ผ่านไปเฉยๆ waitForURL จะรอ URL เปลี่ยนซึ่งไม่มีวันเกิดขึ้นจน timeout
+  const otpFirstDigit = page.locator('#input-two-factor-digit-0');
+  const needsTotp = await otpFirstDigit
+    .waitFor({ state: 'visible', timeout: 10_000 })
+    .then(() => true)
+    .catch(() => false);
+
+  if (needsTotp) {
+    if (!totpSecret) {
+      throw new Error(
+        `บัญชี ${emailVar} ติด 2FA (TOTP) แต่ login() ไม่ได้รับ credentials.totpSecret มาด้วย — ` +
+          'ใส่ secret key ของบัญชีนี้ลง .env แล้วส่งเข้ามาทาง credentials.totpSecret'
+      );
+    }
+    const code = generateSync({ secret: totpSecret });
+    for (let i = 0; i < 6; i++) {
+      await page.locator(`#input-two-factor-digit-${i}`).fill(code[i]);
+    }
+    await page.locator('#btn-two-factor-verify').click();
+  }
 
   // redirect_url ที่ใช้เข้าหน้านี้ปล่อยว่างไว้ เลยไม่เคยเห็นปลายทางจริงหลังล็อกอิน
   // สำเร็จ จึงรอแค่ให้ออกจากหน้า sign-in แทนที่จะรอ URL เฉพาะเจาะจง — เทสต์จะ
@@ -91,13 +124,23 @@ export async function login(
  * TestProd เป็น environment ที่ตัดเงินจริง: TEST_EMAIL/TEST_PASSWORD จะล็อกอิน
  * เข้าบัญชีที่สั่งซื้อของจริงได้ (ดู helpers/testprod-tickets.ts)
  */
-export async function loginTestProd(page: Page): Promise<void> {
-  const email = process.env.TEST_EMAIL;
-  const password = process.env.TEST_PASSWORD;
+export async function loginTestProd(
+  page: Page,
+  credentials?: {
+    email: string | undefined;
+    password: string | undefined;
+    envVarNames: [string, string];
+    totpSecret?: string;
+  }
+): Promise<void> {
+  const email = credentials?.email ?? process.env.TEST_EMAIL;
+  const password = credentials?.password ?? process.env.TEST_PASSWORD;
+  const [emailVar, passwordVar] = credentials?.envVarNames ?? ['TEST_EMAIL', 'TEST_PASSWORD'];
+  const totpSecret = credentials?.totpSecret;
 
   if (!email || !password) {
     throw new Error(
-      'TEST_EMAIL / TEST_PASSWORD are not set. Copy .env.example to .env and fill them in.'
+      `${emailVar} / ${passwordVar} are not set. Copy .env.example to .env and fill them in.`
     );
   }
 
@@ -111,6 +154,29 @@ export async function loginTestProd(page: Page): Promise<void> {
   await page.locator('#input-input-username').fill(email);
   await page.locator('#input-input-password').fill(password);
   await page.locator('#btn-submit-login').click();
+
+  // เหมือนกับ login() ฝั่ง dev — บัญชีที่ติด TOTP 2FA จะเด้ง modal ทับหน้าเดิม
+  // โดยไม่เปลี่ยน URL เช็คตรงนี้ก่อน waitForURL ด้านล่าง ไม่งั้นจะรอ URL เปลี่ยน
+  // ซึ่งไม่มีวันเกิดขึ้นจน timeout
+  const otpFirstDigit = page.locator('#input-two-factor-digit-0');
+  const needsTotp = await otpFirstDigit
+    .waitFor({ state: 'visible', timeout: 10_000 })
+    .then(() => true)
+    .catch(() => false);
+
+  if (needsTotp) {
+    if (!totpSecret) {
+      throw new Error(
+        `บัญชี ${emailVar} ติด 2FA (TOTP) แต่ loginTestProd() ไม่ได้รับ credentials.totpSecret มาด้วย — ` +
+          'ใส่ secret key ของบัญชีนี้ลง .env แล้วส่งเข้ามาทาง credentials.totpSecret'
+      );
+    }
+    const code = generateSync({ secret: totpSecret });
+    for (let i = 0; i < 6; i++) {
+      await page.locator(`#input-two-factor-digit-${i}`).fill(code[i]);
+    }
+    await page.locator('#btn-two-factor-verify').click();
+  }
 
   await page.waitForURL((url) => !url.pathname.includes('/authen/sign-in'), {
     timeout: 30_000,

@@ -18,6 +18,21 @@ export default defineConfig({
     trace: 'retain-on-failure',
     screenshot: 'only-on-failure',
     video: 'retain-on-failure',
+    // ยืนยันจากการทดสอบจริง: env-Pre บล็อก Chromium ที่ Playwright แถมมาเองด้วย
+    // CloudFront 403 เสมอ ไม่ว่าจะมี session login ไว้แล้วหรือไม่ก็ตาม — ทั้ง
+    // ตอนรันปกติ (`playwright test`) และ UI mode (`--ui`) ใส่ไว้ที่ global use
+    // ตรงนี้ (แทนที่จะใส่แยกทีละ project) เพื่อให้ทุกวิธีรัน — ทั้ง CLI, --ui,
+    // VS Code extension — ใช้ Chrome จริงเหมือนกันหมด ไม่มีทางหลุดไปใช้
+    // Chromium ที่แถมมาได้อีก ต้องมี Google Chrome ติดตั้งอยู่ในเครื่องที่รันเทสต์ด้วย
+    channel: 'chrome',
+    // แม้ใช้ Chrome จริง (channel:'chrome') แล้ว env-Pre ก็ยังโดน CloudFront
+    // 403 อยู่ดีถ้ารันแบบ headless (ค่า default ของ `playwright test` และของ
+    // UI mode ถ้าไม่กด "show browser") — ตอนที่ทดสอบผ่านด้วย
+    // scripts/save-dev-session.js นั้นสคริปต์เปิดแบบ headless:false เสมอ
+    // เพราะงั้น CloudFront ต้องกำลังเช็ค headless fingerprint ด้วย ไม่ใช่แค่
+    // ชนิดของ browser binary — บังคับ headed เฉพาะตอนรันในเครื่อง (ปิดใน CI
+    // เพราะเครื่อง CI ไม่มีจอให้เปิด headed ได้)
+    headless: process.env.CI ? true : false,
   },
   projects: [
     // login ครั้งเดียว (tests/auth.setup.ts) แล้วเขียน storageState.json

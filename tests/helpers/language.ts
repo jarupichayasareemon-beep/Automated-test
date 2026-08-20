@@ -85,3 +85,27 @@ export async function detectCurrentLanguage(
   }
   return match.label;
 }
+
+/**
+ * ห่อ detectCurrentLanguage + switchLanguage เป็น stateful helper ตัวเดียว —
+ * ตัวเรียกใช้ไม่ต้องประกาศ/จัดการตัวแปร `currentLabel` เอง และไม่ต้องเขียน
+ * pattern "detect ครั้งแรก แล้วค่อย switch" ซ้ำในทุกเทสต์ (ตัว tracker จำ label
+ * ปัจจุบันไว้ให้เอง อัปเดตให้เองทุกครั้งที่ switchTo สำเร็จ)
+ */
+export function createLanguageTracker(
+  page: Page,
+  locales: { code: string; label: string }[],
+  headingTextByCode: Record<string, string>
+) {
+  let currentLabel: string | null = null;
+
+  return {
+    async switchTo(targetLabel: string, expectedHeadingText: string): Promise<void> {
+      if (currentLabel === null) {
+        currentLabel = await detectCurrentLanguage(page, locales, headingTextByCode);
+      }
+      await switchLanguage(page, currentLabel, targetLabel, expectedHeadingText);
+      currentLabel = targetLabel;
+    },
+  };
+}

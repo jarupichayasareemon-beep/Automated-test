@@ -2,7 +2,7 @@ import { test, expect, Page, BrowserContext } from '@playwright/test';
 import path from 'node:path';
 import { loadTranslations, createTranslator, LOCALES } from '../utils/i18n';
 import { login } from './helpers/auth';
-import { switchLanguage, detectCurrentLanguage } from './helpers/language';
+import { createLanguageTracker } from './helpers/language';
 import { createSharedPage, closeSharedPage } from './helpers/recording';
 
 // รวม 4 ไฟล์เดิม (saved-cards-i18n.spec.ts, delete-dialog-i18n.spec.ts,
@@ -30,19 +30,20 @@ const headingTextByCode = Object.fromEntries(
 // (tests/auth.setup.ts) เก็บภาพสถานะ ณ ช่วงเวลาหนึ่งไว้ (point-in-time
 // snapshot) ถ้าใช้ page ใหม่ทุกเทสต์ก็จะโหลดภาษาที่ capture ไว้ตอนแรกซ้ำๆ
 // ทำให้ switchLanguage() ของเทสต์ก่อนหน้าถูกล้างไปเงียบๆ การใช้ page เดียวกัน
-// ตลอดจะรักษาสถานะภาษาจริงบนหน้าเว็บ — รวมถึงการติดตามค่าของ currentLabel —
+// ตลอดจะรักษาสถานะภาษาจริงบนหน้าเว็บ — รวมถึงค่าที่ locale tracker จำไว้ —
 // ให้ถูกต้อง
 test.describe.serial('Saved Cards page — main text translations', () => {
   let page: Page;
   let context: BrowserContext | null;
   // เว็บนี้จำภาษาที่เลือกไว้ระดับบัญชี ดังนั้นภาษาเริ่มต้นจริงๆ ตอนรันใหม่แต่ละ
   // ครั้งอาจเป็นภาษาอะไรก็ได้ที่ session ก่อนหน้าทิ้งไว้ — ไม่จำเป็นต้องเป็น
-  // "English" เสมอไป ตรวจจับแค่ครั้งเดียวตอนเทสต์แรก จากตัวหน้าเว็บเอง ดู
-  // detectCurrentLanguage()
-  let currentLabel: string | null = null;
+  // "English" เสมอไป tracker จะตรวจจับให้เองแค่ครั้งเดียวตอนเทสต์แรก จากตัว
+  // หน้าเว็บ ดู createLanguageTracker()
+  let locale: ReturnType<typeof createLanguageTracker>;
 
   test.beforeAll(async ({ browser }) => {
     ({ page, context } = await createSharedPage(browser, { storageState: 'storageState.json' }));
+    locale = createLanguageTracker(page, LOCALES, headingTextByCode);
   });
 
   test.afterAll(async () => {
@@ -55,11 +56,7 @@ test.describe.serial('Saved Cards page — main text translations', () => {
 
   for (const { code, label } of LOCALES) {
     test(`Saved Cards page shows correct text for ${code} (${label})`, async () => {
-      if (currentLabel === null) {
-        currentLabel = await detectCurrentLanguage(page, LOCALES, headingTextByCode);
-      }
-      await switchLanguage(page, currentLabel, label, t('save_cards_title', code));
-      currentLabel = label;
+      await locale.switchTo(label, t('save_cards_title', code));
 
       // ข้อความ title นี้ปรากฏใน sidebar nav item ชื่อเดียวกันด้วย ใช้แค่
       // getByText({exact: true}) เฉยๆ จะกำกวม (strict-mode violation) —
@@ -100,10 +97,11 @@ test.describe.serial('Saved Cards page — main text translations', () => {
 test.describe.serial('Saved Cards page — delete confirmation dialog translations', () => {
   let page: Page;
   let context: BrowserContext | null;
-  let currentLabel: string | null = null;
+  let locale: ReturnType<typeof createLanguageTracker>;
 
   test.beforeAll(async ({ browser }) => {
     ({ page, context } = await createSharedPage(browser, { storageState: 'storageState.json' }));
+    locale = createLanguageTracker(page, LOCALES, headingTextByCode);
   });
 
   test.afterAll(async () => {
@@ -116,11 +114,7 @@ test.describe.serial('Saved Cards page — delete confirmation dialog translatio
 
   for (const { code, label } of LOCALES) {
     test(`delete confirmation dialog is translated for ${code} (${label})`, async () => {
-      if (currentLabel === null) {
-        currentLabel = await detectCurrentLanguage(page, LOCALES, headingTextByCode);
-      }
-      await switchLanguage(page, currentLabel, label, t('save_cards_title', code));
-      currentLabel = label;
+      await locale.switchTo(label, t('save_cards_title', code));
 
       // เปิดเมนู "⋮" ที่แถวบัตรที่บันทึกไว้แถวแรก ปุ่มนี้มี id ที่ตายตัว
       // ("card-action-more-0" สำหรับแถวแรก แล้วเลขจะเพิ่มตามแถว) — ยืนยัน
@@ -174,7 +168,7 @@ test.describe.serial('Saved Cards page — delete confirmation dialog translatio
 test.describe.serial('Saved Cards page — empty state translations', () => {
   let page: Page;
   let context: BrowserContext | null;
-  let currentLabel: string | null = null;
+  let locale: ReturnType<typeof createLanguageTracker>;
 
   test.beforeAll(async ({ browser }) => {
     ({ page, context } = await createSharedPage(browser));
@@ -182,7 +176,11 @@ test.describe.serial('Saved Cards page — empty state translations', () => {
       email: process.env.TEST_EMPTY_EMAIL,
       password: process.env.TEST_EMPTY_PASSWORD,
       envVarNames: ['TEST_EMPTY_EMAIL', 'TEST_EMPTY_PASSWORD'],
+      // TEST_EMPTY_EMAIL คือบัญชีเดียวกับ TEST_PROMO_EMAIL (ติด TOTP 2FA) เลย
+      // ใช้ secret เดียวกันกรอกโค้ดอัตโนมัติ
+      totpSecret: process.env.TEST_PROMO_TOTP_SECRET,
     });
+    locale = createLanguageTracker(page, LOCALES, headingTextByCode);
   });
 
   test.afterAll(async () => {
@@ -195,11 +193,7 @@ test.describe.serial('Saved Cards page — empty state translations', () => {
 
   for (const { code, label } of LOCALES) {
     test(`empty Saved Cards state is translated for ${code} (${label})`, async () => {
-      if (currentLabel === null) {
-        currentLabel = await detectCurrentLanguage(page, LOCALES, headingTextByCode);
-      }
-      await switchLanguage(page, currentLabel, label, t('save_cards_title', code));
-      currentLabel = label;
+      await locale.switchTo(label, t('save_cards_title', code));
 
       await expect(page.getByText(t('empty_card_title', code), { exact: true })).toBeVisible();
       await expect(page.getByText(t('empty_card_description', code), { exact: true })).toBeVisible();
@@ -214,10 +208,11 @@ test.describe.serial('Saved Cards page — empty state translations', () => {
 test.describe.serial('Saved Cards page — set-as-default confirmation dialog translations', () => {
   let page: Page;
   let context: BrowserContext | null;
-  let currentLabel: string | null = null;
+  let locale: ReturnType<typeof createLanguageTracker>;
 
   test.beforeAll(async ({ browser }) => {
     ({ page, context } = await createSharedPage(browser, { storageState: 'storageState.json' }));
+    locale = createLanguageTracker(page, LOCALES, headingTextByCode);
   });
 
   test.afterAll(async () => {
@@ -230,11 +225,7 @@ test.describe.serial('Saved Cards page — set-as-default confirmation dialog tr
 
   for (const { code, label } of LOCALES) {
     test(`set-as-default confirmation dialog is translated for ${code} (${label})`, async () => {
-      if (currentLabel === null) {
-        currentLabel = await detectCurrentLanguage(page, LOCALES, headingTextByCode);
-      }
-      await switchLanguage(page, currentLabel, label, t('save_cards_title', code));
-      currentLabel = label;
+      await locale.switchTo(label, t('save_cards_title', code));
 
       // เปิดเมนู "⋮" ที่แถวบัตรที่บันทึกไว้แถวที่สอง (index 1) — แถวแรก
       // (index 0) เป็นบัตร default อยู่แล้ว เมนูของมันจึงไม่มีตัวเลือก "Set as

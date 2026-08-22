@@ -7,5 +7,5 @@
     "skipLibCheck": true,
     "resolveJsonModule": true
   },
-  "include": ["Test case/**/*.tsUtils/**/*.ts*.ts", "playwright.config.ts"]
+  "include": ["Test case/**/*.ts", "Utils/**/*.ts", "playwright.config.ts"]
 }

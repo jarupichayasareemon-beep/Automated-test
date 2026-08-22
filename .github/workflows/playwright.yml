@@ -30,6 +30,7 @@ jobs:
           TEST_PASSWORD: ${{ secrets.TEST_PASSWORD }}
           TEST_EMPTY_EMAIL: ${{ secrets.TEST_EMPTY_EMAIL }}
           TEST_EMPTY_PASSWORD: ${{ secrets.TEST_EMPTY_PASSWORD }}
+          TEST_PROMO_TOTP_SECRET: ${{ secrets.TEST_PROMO_TOTP_SECRET }}
         run: npx playwright test
 
       - uses: actions/upload-artifact@v4

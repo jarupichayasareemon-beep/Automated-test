@@ -28,6 +28,7 @@ jobs:
           BASE_URL: ${{ secrets.BASE_URL }}
           TEST_EMAIL: ${{ secrets.TEST_EMAIL }}
           TEST_PASSWORD: ${{ secrets.TEST_PASSWORD }}
+          TEST_TOTP_SECRET: ${{ secrets.TEST_TOTP_SECRET }}
           TEST_EMPTY_EMAIL: ${{ secrets.TEST_EMPTY_EMAIL }}
           TEST_EMPTY_PASSWORD: ${{ secrets.TEST_EMPTY_PASSWORD }}
           TEST_PROMO_TOTP_SECRET: ${{ secrets.TEST_PROMO_TOTP_SECRET }}

@@ -18,12 +18,7 @@ if (fs.existsSync(authFile)) {
   });
 } else {
   setup('authenticate', async ({ page }) => {
-    await login(page, {
-      email: process.env.TEST_EMAIL,
-      password: process.env.TEST_PASSWORD,
-      envVarNames: ['TEST_EMAIL', 'TEST_PASSWORD'],
-      totpSecret: process.env.TEST_TOTP_SECRET,
-    });
+    await login(page);
     await page.context().storageState({ path: authFile });
   });
 }

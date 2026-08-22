@@ -1,6 +1,6 @@
 import { test, expect, Page, BrowserContext } from '@playwright/test';
 import path from 'node:path';
-import { loadTranslations, createTranslator, LOCALES } from '../../Utils/i18n';
+import { loadTranslations, createTranslator, LOCALES } from '../../utils/i18n';
 import { login } from '../helpers/auth';
 import { createLanguageTracker } from '../helpers/language';
 import { createSharedPage, closeSharedPage } from '../helpers/recording';

@@ -18,7 +18,7 @@ if (fs.existsSync(authFile)) {
   });
 } else {
   setup('authenticate', async ({ page }) => {
-    await login(page);
+    await login(page, { totpSecret: process.env.TEST_TOTP_SECRET });
     await page.context().storageState({ path: authFile });
   });
 }
